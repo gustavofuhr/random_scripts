@@ -18,7 +18,7 @@ def fetch_paper_details_arxiv(arxiv_number):
     return d
     
 def sanitize_title(title):
-    return title.replace(":", ",")
+    return title.replace(":", ",").replace("/", "-")
 
 def rename_arxiv_files(root_path, include_updated_year = False, dry_run = False):
     arxiv_files = {}
