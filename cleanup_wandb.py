@@ -13,6 +13,7 @@ def cleanup_wandb_runs(project_name, entity_name, duration_threshold_minutes=1, 
         dry_run (bool): If True, no runs are deleted, only printed.
     """
     # Initialize W&B API
+    wandb.login(key=os.getenv("WANDB_API_KEY"))
     api = wandb.Api()
 
     # Verify if the project exists before proceeding
