@@ -39,24 +39,18 @@ def cleanup_wandb_runs(project_name, entity_name, duration_threshold_minutes=1, 
 
     for run in runs:
         # Calculate run duration (or skip runs that aren't finished or running)
-        if run.state == "finished" and run.summary.get('_runtime'):
+        if run.summary.get('_runtime') and run.state != "running":
             duration_seconds = run.summary.get('_runtime')
             if duration_seconds < duration_threshold.total_seconds():
-                print(f"[DRY RUN] Deleting short run {run.name} (ID: {run.id}, Duration: {duration_seconds} seconds)")
+                if dry_run: print(f"[DRY RUN] Deleting short run {run.name} (ID: {run.id}, Duration: {duration_seconds} seconds)")
                 if not dry_run:
                     run.delete()
                     print(f"Run {run.name} deleted successfully.")
-        elif run.state == "failed":
-            # Delete failed runs
-            print(f"[DRY RUN] Deleting failed run {run.name} (ID: {run.id})")
-            if not dry_run:
-                run.delete()
-                print(f"Run {run.name} deleted successfully.")
 
 # Example usage
 cleanup_wandb_runs(
     project_name="mmdetection-upps",
     entity_name="gfuhr2",
-    duration_threshold_minutes=1,
+    duration_threshold_minutes=10,
     dry_run=False  # Set to False to perform actual deletion
 )
